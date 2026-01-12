@@ -1,0 +1,13 @@
+# Xcode
+build/
+DerivedData/
+*.xcodeproj/project.xcworkspace
+*.xcodeproj/xcuserdata
+*.xcodeproj
+
+# Binaries
+MyHorrorGame
+*.o
+
+# OS stuff
+.DS_Store
