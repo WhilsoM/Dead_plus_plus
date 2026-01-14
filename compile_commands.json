@@ -1,0 +1,15 @@
+[
+  {
+    "file": "src/main.cpp",
+    "arguments": [
+      "clang++",
+      "src/main.cpp",
+      "-o",
+      "MyHorrorGame",
+      "-I/opt/homebrew/include",
+      "-std=c++20"
+    ],
+    "directory": "/Users/samuraiqwizlio/Desktop/games/MyHorrorGame/MyHorrorGame",
+    "output": "MyHorrorGame"
+  }
+]

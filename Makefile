@@ -1,8 +1,8 @@
 CXX = clang++
-CXXFLAGS = -I/opt/homebrew/include -std=c++17
-LDFLAGS = -L/opt/homebrew/lib -lsfml-graphics -lsfml-window -lsfml-system
+CXXFLAGS = -I/opt/homebrew/include -std=c++20
+LDFLAGS = -L/opt/homebrew/lib -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio
 TARGET = MyHorrorGame
-SRC = main.cpp
+SRC = src/main.cpp
 
 all:
 	$(CXX) $(SRC) -o $(TARGET) $(CXXFLAGS) $(LDFLAGS)
