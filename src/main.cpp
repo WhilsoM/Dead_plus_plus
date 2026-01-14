@@ -1,4 +1,5 @@
 #include "config/GameState.hpp"
+#include "config/GameUi.hpp"
 #include "screens/Menu.hpp"
 #include "screens/Options.hpp"
 #include "sounds/GameMusic.hpp"
@@ -16,6 +17,7 @@ int main() {
 
   GameState currentState = GameState::Menu;
   GameMusic menuMusic;
+  GameUI ui;
 
   Options options(windowX, windowY);
   Menu menu(windowX, windowY);
@@ -23,8 +25,10 @@ int main() {
   window.setFramerateLimit(60);
 
   Player player(400.f, 300.f, 100.f, 10.f);
-  // TODO: я не использую пока что startX, startY
-  Zombie zombie(100.f, 100.f, 15.f, 5.f);
+
+  std::vector<Zombie> enemies;
+  enemies.push_back(Zombie(50.f, 50.f, 15.f, 5.f));
+  enemies.push_back(Zombie(100.f, 100.f, 15.f, 5.f));
 
   const auto onClose = [&window](const sf::Event::Closed &) { window.close(); };
   const auto onKeyPressed = [&window](const sf::Event::KeyPressed &key) {
@@ -38,6 +42,8 @@ int main() {
 
     view.setSize({800.f, 600.f});
   };
+
+  sf::Clock damageClock;
 
   while (window.isOpen()) {
     while (const std::optional event = window.pollEvent()) {
@@ -95,25 +101,49 @@ int main() {
     }
 
     window.clear(sf::Color::Black);
+
     if (currentState == GameState::Menu) {
       menuMusic.play_sound();
       menu.draw(window);
     } else if (currentState == GameState::Options) {
       options.draw(window);
-    } else {
+    } else if (currentState == GameState::Playing) {
       menuMusic.stop_music();
-
-      window.setView(view);
 
       player.control();
       player.update(windowX, windowY);
 
-      zombie.update(player.getPosition());
-      window.setView(view);
-      window.draw(player);
-      window.draw(zombie);
-    }
+      for (size_t i = 0; i < enemies.size(); ++i) {
+        enemies[i].update(player.getPosition());
 
+        // ПРЕДОТВРАЩЕНИЕ НАКЛАДЫВАНИЯ
+        for (size_t j = i + 1; j < enemies.size(); ++j) {
+          enemies[i].resolveCollision(enemies[j]);
+        }
+
+        // СНЯТИЕ ХП ПРИ КОНТАКТЕ (SFML 3 использует findIntersection)
+        if (player.getGlobalBounds().findIntersection(
+                enemies[i].getGlobalBounds())) {
+          if (damageClock.getElapsedTime().asSeconds() > 1.2f) {
+            player.takeDamage(15.f);
+            damageClock.restart();
+            std::cout << "Player HP: " << player.getHealth() << std::endl;
+          }
+        }
+      }
+
+      view.setCenter(player.getPosition());
+      window.setView(view);
+
+      window.draw(player);
+      for (auto &zombie : enemies) {
+        window.draw(zombie);
+      }
+
+      window.setView(window.getDefaultView());
+      ui.update(player.getHealth(), 100.f);
+      ui.draw(window);
+    }
     window.display();
   }
   return 0;
