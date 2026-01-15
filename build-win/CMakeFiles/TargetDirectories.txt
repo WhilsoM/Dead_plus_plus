@@ -1,0 +1,3 @@
+/Users/samuraiqwizlio/Desktop/games/MyHorrorGame/MyHorrorGame/build-win/CMakeFiles/MyHorrorGame.dir
+/Users/samuraiqwizlio/Desktop/games/MyHorrorGame/MyHorrorGame/build-win/CMakeFiles/edit_cache.dir
+/Users/samuraiqwizlio/Desktop/games/MyHorrorGame/MyHorrorGame/build-win/CMakeFiles/rebuild_cache.dir
